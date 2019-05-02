@@ -5,13 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class KafkaProducerTest {
+public class SimpleProducerTest {
 
   @RegisterExtension
   public static final SharedKafkaTestResource sharedKafkaTestResource = new SharedKafkaTestResource();
 
   @Test
-  void just() {
+  void first() {
     fail("Implement me!!!");
   }
 

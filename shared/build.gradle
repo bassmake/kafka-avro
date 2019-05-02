@@ -1,4 +1,6 @@
 dependencies {
-  implementation "org.apache.kafka:kafka-clients:$kafkaVersion"
-  implementation project(':schema')
+  compile "io.vavr:vavr:0.10.0"
+  compile "org.apache.kafka:kafka-clients:$kafkaVersion"
+  compile "ch.qos.logback:logback-classic:1.2.3"
+  compile project(':schema')
 }

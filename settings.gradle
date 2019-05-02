@@ -1,0 +1,5 @@
+rootProject.name = 'kafka-avro'
+
+include 'schema'
+include 'producer'
+include 'consumer'

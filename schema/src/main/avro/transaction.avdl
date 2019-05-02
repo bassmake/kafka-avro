@@ -1,0 +1,11 @@
+@namespace("sk.bsmk.hi")
+protocol MonetaryTransactionProtocol {
+
+  record MonetaryTransaction {
+    string id;
+    string source;
+    double amount;
+    string currency;
+  }
+
+}

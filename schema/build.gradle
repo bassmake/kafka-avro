@@ -1,0 +1,11 @@
+apply plugin: "com.commercehub.gradle.plugin.avro"
+
+dependencies {
+  compile "org.apache.avro:avro:1.8.2"
+}
+
+avro {
+  createSetters = false
+  fieldVisibility = "PRIVATE"
+  validateDefaults = true
+}

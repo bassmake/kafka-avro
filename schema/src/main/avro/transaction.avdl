@@ -1,6 +1,10 @@
 @namespace("sk.bsmk.hi")
 protocol MonetaryTransactionProtocol {
 
+  record TenantKey {
+    string tenant;
+  }
+
   record MonetaryTransaction {
     string id;
     string source;

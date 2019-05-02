@@ -39,7 +39,7 @@ class SimpleConsumerTest {
   }
 
   @Test
-  void that_string_consumer_works() {
+  void that_first_message_is_consumed() {
     final KafkaTestUtils utils = kafka.getKafkaTestUtils();
     assertThat(utils.consumeAllRecordsFromTopic(topic)).hasSize(1);
 

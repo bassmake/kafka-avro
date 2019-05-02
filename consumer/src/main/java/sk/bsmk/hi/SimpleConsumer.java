@@ -1,5 +1,6 @@
 package sk.bsmk.hi;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
@@ -17,11 +18,12 @@ public class SimpleConsumer {
 
   public SimpleConsumer(String bootstrapServers, String id, String groupId, String topic) {
     final Properties config = new Properties();
-    config.put("client.id", id);
-    config.put("group.id", groupId);
-    config.put("bootstrap.servers", bootstrapServers);
-    config.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    config.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    config.put(ConsumerConfig.CLIENT_ID_CONFIG, id);
+    config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     this.config = config;
     this.topic = topic;
   }

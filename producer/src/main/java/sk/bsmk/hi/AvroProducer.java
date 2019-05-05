@@ -5,17 +5,16 @@ import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Future;
 
 public class AvroProducer {
 
@@ -24,14 +23,14 @@ public class AvroProducer {
   private final KafkaProducer<Object, Object> producer;
   private final String topic;
 
-  public AvroProducer(
-    KafkaProducerConfig config
-  ) {
+  public AvroProducer(KafkaProducerConfig config) {
     final Properties props = new Properties();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, config.id());
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
-//    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
-//    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+    //    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+    // KafkaAvroSerializer.class.getName());
+    //    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+    // KafkaAvroSerializer.class.getName());
     props.put(ProducerConfig.ACKS_CONFIG, "all");
     producer = new KafkaProducer<>(props, serializer(true), serializer(false));
     this.topic = config.topic();
@@ -39,7 +38,8 @@ public class AvroProducer {
 
   public Future<RecordMetadata> send(TenantKey key, MonetaryTransaction transaction) {
     final ProducerRecord<Object, Object> record = new ProducerRecord<>(topic, key, transaction);
-    return producer.send(record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
+    return producer.send(
+        record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
   }
 
   private KafkaAvroSerializer serializer(boolean isKey) {
@@ -51,5 +51,4 @@ public class AvroProducer {
     serializer.configure(serializerProps, isKey);
     return serializer;
   }
-
 }

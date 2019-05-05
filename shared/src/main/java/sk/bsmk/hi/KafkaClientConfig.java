@@ -7,5 +7,4 @@ public interface KafkaClientConfig {
   String id();
 
   String topic();
-
 }

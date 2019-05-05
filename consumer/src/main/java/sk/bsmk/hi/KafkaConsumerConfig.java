@@ -7,5 +7,4 @@ import org.immutables.value.Value;
 public interface KafkaConsumerConfig extends KafkaClientConfig {
 
   String groupId();
-
 }

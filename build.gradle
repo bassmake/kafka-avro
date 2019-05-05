@@ -1,9 +1,12 @@
 buildscript {
   repositories {
+    maven { url "https://plugins.gradle.org/m2/" }
     jcenter()
+    mavenCentral()
   }
   dependencies {
     classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.16.0"
+    classpath "com.diffplug.spotless:spotless-plugin-gradle:3.23.0"
   }
 }
 
@@ -13,6 +16,7 @@ version '1.0-SNAPSHOT'
 subprojects {
 
   apply plugin: 'java'
+  apply plugin: 'com.diffplug.gradle.spotless'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -32,19 +36,30 @@ subprojects {
 
   dependencies {
 
-    compileOnly         "org.immutables:value:$immutablesVersion:annotations"
+    compileOnly "org.immutables:value:$immutablesVersion:annotations"
     annotationProcessor "org.immutables:value:$immutablesVersion"
-    
-    
-    testRuntime         "org.junit.jupiter:junit-jupiter-engine:$jUnitVersion"
-    testImplementation  "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
-    testImplementation  "com.salesforce.kafka.test:kafka-junit5:3.1.1"
-    testImplementation  "org.apache.kafka:kafka_2.12:$kafkaVersion"
-    testImplementation  "org.assertj:assertj-core:3.12.2"
+
+
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
+    testImplementation "com.salesforce.kafka.test:kafka-junit5:3.1.1"
+    testImplementation "org.apache.kafka:kafka_2.12:$kafkaVersion"
+    testImplementation "org.assertj:assertj-core:3.12.2"
   }
 
   test {
     useJUnitPlatform()
+  }
+
+  spotless {
+    java {
+      removeUnusedImports()
+      googleJavaFormat('1.7')
+    }
+  }
+
+  compileJava.dependsOn {
+    spotlessApply
   }
 
 }

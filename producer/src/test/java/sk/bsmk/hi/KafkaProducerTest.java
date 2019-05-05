@@ -5,13 +5,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 public class KafkaProducerTest {
 
-  @RegisterExtension
-  static final SharedKafkaTestResource kafka = new SharedKafkaTestResource();
+  @RegisterExtension static final SharedKafkaTestResource kafka = new SharedKafkaTestResource();
 
-  final KafkaProducerConfig config = ImmutableKafkaProducerConfig.builder()
-    .bootstrapServers(kafka.getKafkaConnectString())
-    .id("test-producer")
-    .topic("producer-test-topic")
-    .build();
-
+  final KafkaProducerConfig config =
+      ImmutableKafkaProducerConfig.builder()
+          .bootstrapServers(kafka.getKafkaConnectString())
+          .id("test-producer")
+          .topic("producer-test-topic")
+          .build();
 }

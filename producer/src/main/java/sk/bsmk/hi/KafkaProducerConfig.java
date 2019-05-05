@@ -4,5 +4,4 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @Value.Style(stagedBuilder = true)
-public interface KafkaProducerConfig extends KafkaClientConfig {
-}
+public interface KafkaProducerConfig extends KafkaClientConfig {}

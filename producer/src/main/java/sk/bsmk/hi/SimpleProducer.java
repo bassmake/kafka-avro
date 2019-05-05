@@ -1,5 +1,7 @@
 package sk.bsmk.hi;
 
+import java.util.Properties;
+import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -7,9 +9,6 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Properties;
-import java.util.concurrent.Future;
 
 public class SimpleProducer {
 
@@ -34,7 +33,7 @@ public class SimpleProducer {
     final String message = String.format("message-%d", number);
 
     final ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, message);
-    return producer.send(record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
+    return producer.send(
+        record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
   }
-
 }

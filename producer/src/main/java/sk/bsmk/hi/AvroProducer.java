@@ -16,20 +16,12 @@ public class AvroProducer {
   private final KafkaProducer<Object, Object> producer;
   private final String topic;
 
-  public AvroProducer(KafkaProducerConfig config) {
+  public AvroProducer(KafkaProducerConfig config, KeyValueAvroSerde serde) {
     final Properties props = new Properties();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, config.id());
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
-    //    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-    // KafkaAvroSerializer.class.getName());
-    //    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-    // KafkaAvroSerializer.class.getName());
     props.put(ProducerConfig.ACKS_CONFIG, "all");
-    producer =
-        new KafkaProducer<>(
-            props,
-            AvroMockRegistrySerDe.serde(true).serializer(),
-            AvroMockRegistrySerDe.serde(false).serializer());
+    producer = new KafkaProducer<>(props, serde.key().serializer(), serde.key().serializer());
     this.topic = config.topic();
   }
 

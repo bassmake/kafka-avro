@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class AvroProducerTest extends KafkaProducerTest {
 
-  private final AvroProducer producer = new AvroProducer(config);
+  private final KeyValueAvroSerde serde = new KeyValueAvroMockSchemaRegistry();
+  private final AvroProducer producer = new AvroProducer(config, serde);
 
   @Test
   void that_avro_message_is_produced() throws Exception {

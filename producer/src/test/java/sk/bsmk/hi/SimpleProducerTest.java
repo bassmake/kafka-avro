@@ -15,20 +15,20 @@ class SimpleProducerTest {
   @RegisterExtension
   static final SharedKafkaTestResource kafka = new SharedKafkaTestResource();
 
-  private static String topic = "producer-test-topic";
+  private final KafkaProducerConfig config = ImmutableKafkaProducerConfig.builder()
+    .bootstrapServers(kafka.getKafkaConnectString())
+    .id("test-producer")
+    .topic("producer-test-topic")
+    .build();
 
-  private final SimpleProducer producer = new SimpleProducer(
-    kafka.getKafkaConnectString(),
-    "test-producer",
-    topic
-  );
+  private final SimpleProducer producer = new SimpleProducer(config);
 
   @Test
   void that_first_message_is_produced() throws Exception {
     final KafkaTestUtils utils = kafka.getKafkaTestUtils();
     producer.send(1).get();
 
-    final List<ConsumerRecord<byte[], byte[]>> records = utils.consumeAllRecordsFromTopic(topic);
+    final List<ConsumerRecord<byte[], byte[]>> records = utils.consumeAllRecordsFromTopic(config.topic());
     assertThat(records).hasSize(1);
   }
 

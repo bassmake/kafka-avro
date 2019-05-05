@@ -16,16 +16,16 @@ public class SimpleConsumer {
   private final Properties config;
   private final String topic;
 
-  public SimpleConsumer(String bootstrapServers, String id, String groupId, String topic) {
-    final Properties config = new Properties();
-    config.put(ConsumerConfig.CLIENT_ID_CONFIG, id);
-    config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-    config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    this.config = config;
-    this.topic = topic;
+  public SimpleConsumer(KafkaConsumerConfig config) {
+    final Properties props = new Properties();
+    props.put(ConsumerConfig.CLIENT_ID_CONFIG, config.id());
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, config.groupId());
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    this.config = props;
+    this.topic = config.topic();
   }
 
   public ConsumerRecords<String, String> poll() {

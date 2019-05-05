@@ -14,15 +14,15 @@ public class AvroProducer {
   private final KafkaProducer<String, String> producer;
   private final String topic;
 
-  public AvroProducer(String bootstrapServers, String id, String topic) {
-    Properties config = new Properties();
-    config.put(ProducerConfig.CLIENT_ID_CONFIG, id);
-    config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroSerializer");
-    config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroSerializer");
-    config.put(ProducerConfig.ACKS_CONFIG, "all");
-    producer = new KafkaProducer<>(config);
-    this.topic = topic;
+  public AvroProducer(KafkaProducerConfig config) {
+    final Properties props = new Properties();
+    props.put(ProducerConfig.CLIENT_ID_CONFIG, config.id());
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroSerializer");
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaAvroSerializer");
+    props.put(ProducerConfig.ACKS_CONFIG, "all");
+    producer = new KafkaProducer<>(props);
+    this.topic = config.topic();
   }
 
 }

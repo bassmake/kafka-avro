@@ -1,0 +1,4 @@
+dependencies {
+  implementation project(':producer')
+  implementation project(':consumer')
+}

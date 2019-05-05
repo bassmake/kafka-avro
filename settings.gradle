@@ -1,6 +1,7 @@
 rootProject.name = 'kafka-avro'
 
 include 'schema'
+include 'shared'
 include 'producer'
 include 'consumer'
-include 'shared'
+include 'app'

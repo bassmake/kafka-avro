@@ -1,12 +1,5 @@
 package sk.bsmk.hi;
 
-import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
-import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -32,7 +25,11 @@ public class AvroProducer {
     //    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
     // KafkaAvroSerializer.class.getName());
     props.put(ProducerConfig.ACKS_CONFIG, "all");
-    producer = new KafkaProducer<>(props, serializer(true), serializer(false));
+    producer =
+        new KafkaProducer<>(
+            props,
+            AvroMockRegistrySerDe.serde(true).serializer(),
+            AvroMockRegistrySerDe.serde(false).serializer());
     this.topic = config.topic();
   }
 
@@ -40,15 +37,5 @@ public class AvroProducer {
     final ProducerRecord<Object, Object> record = new ProducerRecord<>(topic, key, transaction);
     return producer.send(
         record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
-  }
-
-  private KafkaAvroSerializer serializer(boolean isKey) {
-    final Map<String, Object> serializerProps = new HashMap<>();
-    serializerProps.put(KafkaAvroDeserializerConfig.AUTO_REGISTER_SCHEMAS, true);
-    serializerProps.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "unused");
-    final SchemaRegistryClient client = new MockSchemaRegistryClient();
-    final KafkaAvroSerializer serializer = new KafkaAvroSerializer(client);
-    serializer.configure(serializerProps, isKey);
-    return serializer;
   }
 }

@@ -24,15 +24,16 @@ subprojects {
   }
 
   ext {
-    kafkaVersion = '2.0.1'
+    confluentVersion = '5.2.1'
+    kafkaVersion = '2.2.0'
     jUnitVersion = '5.4.2'
   }
 
   dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
     testRuntime        "org.junit.jupiter:junit-jupiter-engine:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
     testImplementation "com.salesforce.kafka.test:kafka-junit5:3.1.1"
-    testImplementation "org.apache.kafka:kafka_2.11:$kafkaVersion"
+    testImplementation "org.apache.kafka:kafka_2.12:$kafkaVersion"
     testImplementation "org.assertj:assertj-core:3.12.2"
   }
 

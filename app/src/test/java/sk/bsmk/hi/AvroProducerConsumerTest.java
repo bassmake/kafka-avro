@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.salesforce.kafka.test.junit5.SharedKafkaTestResource;
 import java.util.UUID;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class AvroProducerConsumerTest {
   @RegisterExtension static final SharedKafkaTestResource kafka = new SharedKafkaTestResource();
 
   private final String topic = "test-avro-topic";
-  private final KeyValueAvroSerde serde = new KeyValueAvroMockSchemaRegistry();
+  private final KeyValueAvroSerde serde = new KeyValueAvroMockSchemaRegistrySerde();
 
   private final KafkaProducerConfig producerConfig =
       ImmutableKafkaProducerConfig.builder()
@@ -51,6 +52,20 @@ public class AvroProducerConsumerTest {
     assertThat(kafka.getKafkaTestUtils().consumeAllRecordsFromTopic(topic)).hasSize(1);
 
     final ConsumerRecords<Object, Object> records = consumer.poll();
+
+    final ConsumerRecord<Object, Object> record = extractOne(records);
+    final TenantKey receivedKey = (TenantKey) record.key();
+    final MonetaryTransaction receivedTransaction = (MonetaryTransaction) record.value();
+
+    assertThat(receivedKey).isEqualTo(key);
+    assertThat(receivedTransaction).isEqualTo(transaction);
+  }
+
+  private ConsumerRecord<Object, Object> extractOne(ConsumerRecords<Object, Object> records) {
     assertThat(records).hasSize(1);
+    for (ConsumerRecord<Object, Object> record : records) {
+      return record;
+    }
+    throw new IllegalStateException("Expecting just one record");
   }
 }

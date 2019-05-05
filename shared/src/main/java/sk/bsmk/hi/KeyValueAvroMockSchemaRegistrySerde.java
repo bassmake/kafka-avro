@@ -11,7 +11,7 @@ import java.util.Map;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 
-public class KeyValueAvroMockSchemaRegistry implements KeyValueAvroSerde {
+public class KeyValueAvroMockSchemaRegistrySerde implements KeyValueAvroSerde {
 
   private final SchemaRegistryClient client = new MockSchemaRegistryClient();
 
@@ -33,20 +33,21 @@ public class KeyValueAvroMockSchemaRegistry implements KeyValueAvroSerde {
   }
 
   private KafkaAvroSerializer serializer(boolean isKey) {
-    final Map<String, Object> serializerProps = new HashMap<>();
-    serializerProps.put(KafkaAvroSerializerConfig.AUTO_REGISTER_SCHEMAS, true);
-    serializerProps.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "unused");
+    final Map<String, Object> props = new HashMap<>();
+    props.put(KafkaAvroSerializerConfig.AUTO_REGISTER_SCHEMAS, true);
+    props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "unused");
     final KafkaAvroSerializer serializer = new KafkaAvroSerializer(client);
-    serializer.configure(serializerProps, isKey);
+    serializer.configure(props, isKey);
     return serializer;
   }
 
   private KafkaAvroDeserializer deserializer(boolean isKey) {
-    final Map<String, Object> deserializerProps = new HashMap<>();
-    deserializerProps.put(KafkaAvroDeserializerConfig.AUTO_REGISTER_SCHEMAS, true);
-    deserializerProps.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "unused");
+    final Map<String, Object> props = new HashMap<>();
+    props.put(KafkaAvroDeserializerConfig.AUTO_REGISTER_SCHEMAS, true);
+    props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true");
+    props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "unused");
     final KafkaAvroDeserializer deserializer = new KafkaAvroDeserializer(client);
-    deserializer.configure(deserializerProps, isKey);
+    deserializer.configure(props, isKey);
     return deserializer;
   }
 }

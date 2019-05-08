@@ -18,12 +18,22 @@ public class AvroProducer {
   public AvroProducer(KafkaProducerConfig config, KeyValueAvroSerde serde) {
     final Properties props = config.properties();
     producer = new KafkaProducer<>(props, serde.key().serializer(), serde.key().serializer());
+    producer.initTransactions();
     this.topic = config.topic();
   }
 
   public Future<RecordMetadata> send(TenantKey key, MonetaryTransaction transaction) {
     final ProducerRecord<Object, Object> record = new ProducerRecord<>(topic, key, transaction);
-    return producer.send(
-        record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
+    try {
+      producer.beginTransaction();
+      final Future<RecordMetadata> metadataFuture =
+          producer.send(
+              record, (metadata, exception) -> log.info("After sending {}: {}", record, metadata));
+      producer.commitTransaction();
+      return metadataFuture;
+    } catch (Exception e) {
+      producer.abortTransaction();
+      throw e;
+    }
   }
 }

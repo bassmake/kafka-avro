@@ -8,11 +8,15 @@ import org.immutables.value.Value;
 @Value.Style(stagedBuilder = true)
 public interface KafkaProducerConfig extends KafkaClientConfig {
 
+  String transactionalId();
+
   @Value.Derived
   default Properties properties() {
     final Properties props = additional();
     props.put(ProducerConfig.CLIENT_ID_CONFIG, id());
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers());
+    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionalId());
+    props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
     props.put(ProducerConfig.ACKS_CONFIG, "all");
     return props;
   }

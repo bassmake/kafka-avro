@@ -12,5 +12,6 @@ public class KafkaProducerTest {
           .bootstrapServers(kafka.getKafkaConnectString())
           .id("test-producer")
           .topic("producer-test-topic")
+          .transactionalId("test-transactional-id")
           .build();
 }

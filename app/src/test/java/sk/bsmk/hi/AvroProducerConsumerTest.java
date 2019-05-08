@@ -22,6 +22,7 @@ public class AvroProducerConsumerTest {
           .bootstrapServers(kafka.getKafkaConnectString())
           .id("test-avro-producer")
           .topic(topic)
+          .transactionalId("test-transactional-id")
           .build();
 
   private final KafkaConsumerConfig consumerConfig =

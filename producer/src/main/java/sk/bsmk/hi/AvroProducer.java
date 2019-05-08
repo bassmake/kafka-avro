@@ -3,7 +3,6 @@ package sk.bsmk.hi;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -17,10 +16,7 @@ public class AvroProducer {
   private final String topic;
 
   public AvroProducer(KafkaProducerConfig config, KeyValueAvroSerde serde) {
-    final Properties props = new Properties();
-    props.put(ProducerConfig.CLIENT_ID_CONFIG, config.id());
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
-    props.put(ProducerConfig.ACKS_CONFIG, "all");
+    final Properties props = config.properties();
     producer = new KafkaProducer<>(props, serde.key().serializer(), serde.key().serializer());
     this.topic = config.topic();
   }
